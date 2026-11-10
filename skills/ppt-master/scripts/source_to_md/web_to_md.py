@@ -766,8 +766,9 @@ def download_and_rewrite_images(
                 print(f"   [WARN] Skip image {abs_url}: {e}")
                 continue
 
-        rel_path = os.path.join(
-            rel_prefix, saved_name) if rel_prefix else saved_name
+        # Markdown links use "/" on every platform; os.path.join gives "\" on Windows.
+        rel_path = Path(
+            rel_prefix, saved_name).as_posix() if rel_prefix else saved_name
         img["src"] = rel_path
         manifest_item = manifest_by_filename.get(saved_name)
         if manifest_item is not None:
